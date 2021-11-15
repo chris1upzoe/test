@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="google-site-verification=H-iK-oxkYNioXyUaRfFNieVIDf1NV-86lFiDIsGDt74" content="on">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Translai combines advanced AI technology with an agile project management system to design an efficient, intelligent user-oriented system. This system optimizes the traditional video/audio localization process, making it a one-stop video localization experience, reducing the labor costs by 60%-80%.">
+    <meta name="keywords" content="Voice translator, SRT Generator Online, Subtitle Translator, Subtitling Translation, Audio Translation, Auto Subtitle Generator, Media Localization, Video Translation, Multimedia Translation Services, translate video subtitle online, Youtube Video Translator, Subtitling Service, Video Translation Service, Multimedia Translation, Cloud based Multimedia Translation, Video Translation Software, Video Subtitle Translation, Translate Video Software, Media localization and management, subtitling translation service">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>Translai | Cloud-based Multimedia Translation and Project Management Solutions</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="shortcut icon" href="../images/favicon-32x32.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css?v=1.0.0">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-71MWWVFT17"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-71MWWVFT17');
+    </script>
+
+  </head>
+<body>
+
+
+  
+<noscript>
+  <strong>We're sorry but xpath doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+  
+<div class="container" id="app" v-cloak>
+</div>
+
+
+<script src="./js/swiper.min.js"></script>
+<script src="./js/jquery-1.11.3.min.js"></script>
+<script src="./js/vue.js"></script>
+<script src="./js/common.js"></script>
+<script src="./js/index.js"></script>
+<script src="./js/sensorsdata.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script>
+  var sensors = window['sensorsDataAnalytic201505'];
+	sensors.init({
+  	server_url: window.SC_URL,
+    is_track_single_page: false, 
+    use_client_time:true,
+    show_log: true,
+    preset_properties: { search_keyword_baidu : true  },
+    send_type:'beacon',
+    heatmap: {
+      clickmap:'default',
+      scroll_notice_map:'default'
+    }
+	});
+
+  sensors.registerPage({
+    platform_type: 'Translai官网',
+    language: window.APP_REGION.indexOf('CN') >= 0 ? (localStorage.getItem("lang") || "zh") : (localStorage.getItem("lang") || "en"),
+  });
+
+  sensors.quick('isReady',function(){
+    let distinctid = sensors.quick('getAnonymousID');
+    sessionStorage.setItem('AnonymousID', distinctid)
+  });
+
+  sensors.quick('autoTrack'); //用于采集 
+  
+  new Vue ({
+    el: '#app',
+
+    data () {
+      return {
+        region: '',      
+        lang: '',
+      }
+    },
+
+    mounted() {
+      this.region = window.APP_REGION
+      sensors.track('click_top_navigation_bar', {
+        button_name: '首页'
+      })
+      if (localStorage.getItem("lang") == 'zh' || (this.region == "CN" && !localStorage.getItem("lang"))) window.location.href = './cn/index.html'
+      if (localStorage.getItem("lang") == 'en' || (this.region == "FO" && !localStorage.getItem("lang"))) window.location.href = './en/index.html'
+      if (localStorage.getItem("lang") == 'fr') window.location.href = './fr/index.html'
+    },
+
+    created () {
+
+    },
+
+    methods: {
+    },
+    
+  })
+
+</script>
+</body>
+</html>

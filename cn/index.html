@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="google-site-verification=H-iK-oxkYNioXyUaRfFNieVIDf1NV-86lFiDIsGDt74" content="on">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Translai combines advanced AI technology with an agile project management system to design an efficient, intelligent user-oriented system. This system optimizes the traditional video/audio localization process, making it a one-stop video localization experience, reducing the labor costs by 60%-80%.">
+    <meta name="keywords" content="Voice translator, SRT Generator Online, Subtitle Translator, Subtitling Translation, Audio Translation, Auto Subtitle Generator, Media Localization, Video Translation, Multimedia Translation Services, translate video subtitle online, Youtube Video Translator, Subtitling Service, Video Translation Service, Multimedia Translation, Cloud based Multimedia Translation, Video Translation Software, Video Subtitle Translation, Translate Video Software, Media localization and management, subtitling translation service">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+
+    <title>Translai | Cloud-based Multimedia Translation and Project Management Solutions</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="shortcut icon" href="../images/favicon-32x32.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css?v=1.0.0">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-71MWWVFT17"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-71MWWVFT17');
+    </script>
+
+  </head>
+<body>
+
+<noscript>
+  <strong>We're sorry but xpath doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+
+<div class="container" id="app" v-cloak>
+  <div :class="'nav-head' + (offset ? ' offset': '')">
+    <nav class="nav flex align-items-center space-between">
+      <div class="nav-left flex">
+        <a class="nav-item">
+          <img src="../images/logo.png" class="logo" alt="logo" />
+        </a>
+        <div class="ml-lg flex align-items-center menu-sm">
+          <div class="menu_item" v-for="menu in menuList" :key="menu.goto">
+            <a v-if="menu.goto !=='free' && menu.goto !=='contact'" :href="'#' + menu.goto" @click="clickTopNavigation(menu.label)" :class="{ 'active-label': active_label == menu.label }">{{ menu.label }}</a>
+            <a v-if="menu.goto =='contact'" :href="'#' + menu.goto" @click="clickTopNavigation(menu.label)" :class="{ 'active-label': active_label == menu.label }" data-agl-cvt="2">{{ menu.label }}</a>
+            <a v-if="menu.goto =='free'" @click="jumpMgrLogin(menu.label)" data-agl-cvt="7">{{ menu.label }}</a>
+          </div>
+        </div>
+      </div>
+      <div class="nav-right flex align-items-center">
+        <div class="nav-phone mr">{{ '联系电话：4008344504' }}</div>
+        <div class="collapse-menu" @click="showMenu = !showMenu">
+          <img class="collapse-icon mt-xs" src="../images/collapse.svg" alt="navigation">
+        </div>
+        
+        <a @click="toQa()" class="menu-sm">{{ '用户指南' }}</a>
+        <el-popover
+          v-model="langShow"
+          placement="bottom-end"
+          width="60"
+          trigger="hover">
+          <img slot="reference" v-if="lang == 'zh'" src="../images/lang_cn_black.svg" class="lang_icon" alt="lang_cn" />
+          <img slot="reference" v-if="lang == 'en'" src="../images/lang_en_black.svg" class="lang_icon" alt="lang_en" />
+          <img slot="reference" v-if="lang == 'fr'" src="../images/lang_fr_black.svg" class="lang_icon" alt="lang_fr" />
+          <div v-if="region == 'CN'" class="pop_content">
+            <div class="pop_item flex-center" @click="changeLang('zh')">{{'中文'}}</div>
+            <div class="pop_item flex-center" @click="changeLang('en')">{{'English'}}</div>
+            <div class="pop_item flex-center" @click="changeLang('fr')">{{'Français'}}</div>
+          </div>
+          <div v-else class="pop_content">
+            <div class="pop_item flex-center" @click="changeLang('en')">{{'English'}}</div>
+            <div class="pop_item flex-center" @click="changeLang('fr')">{{'Français'}}</div>
+            <div class="pop_item flex-center" @click="changeLang('zh')">{{'中文'}}</div>
+          </div>
+        </el-popover>
+        <el-popover
+          placement="bottom-end"
+          trigger="hover">
+          <div slot="reference" class="login menu-sm">{{'登录/注册'}}</div>
+          <div class="pop_content">
+            <div class="pop_item flex-center" @click="toLogin('mgr')">{{'个人/团队用户入口'}}</div>
+            <div class="pop_item flex-center" @click="toLogin('web')">{{'翻译/校对入口'}}</div>
+            <div class="pop_item flex-center" @click="toLogin('dms')">{{'代理商入口'}}</div>
+          </div>
+        </el-popover>
+        
+      </div>
+      
+    </nav>
+    
+  </div>
+  <div :class="'collapse navbar-collapse collapse-menu' + (!showMenu ? ' menu-hide': '')">
+    <ul class="navbar-nav">
+      <li v-for="menu in menuList" :key="menu.goto" class="menu_item flex-center">
+        <a v-if="menu.goto !=='free' && menu.goto !=='contact'" :class="{ 'active-label': active_label == menu.label }" @click="clickTopNavigation(menu.label)">{{ menu.label }}</a>
+        <a v-if="menu.goto =='contact'" :href="'#' + menu.goto" :class="{ 'active-label': active_label == menu.label }" @click="clickTopNavigation(menu.label)" data-agl-cvt="2">{{ menu.label }}</a>
+        <a v-if="menu.goto =='free'" @click="jumpMgrLogin(menu.label)" data-agl-cvt="7">{{ menu.label }}</a>
+      </li>
+      <li class="menu_item flex-center">
+        <a @click="toQa()">{{ '用户指南' }}</a>
+      </li>
+      <li class="menu_item flex-center">
+        <a @click="toLogin('mgr')">{{'个人/团队用户入口'}}</a>
+      </li>
+      <li class="menu_item flex-center">
+        <a @click="toLogin('web')">{{'翻译/校对入口'}}</a>
+      </li>
+      <li class="menu_item flex-center">
+        <a @click="toLogin('dms')">{{'代理商入口'}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- banner图 -->
+  <div class="banner-block" id="home">
+    <div class="banner-top">
+      <div class="banner-top-body">
+        <div class="banner-content">{{'音视频翻译一站式解决方案'}}</div>
+        <div class="banner-content2">{{'「新一代AI人机交互语言服务商」'}}</div>
+        <a class="banner-learnBtn" @click="jumpMgrLogin('免费试用')">{{'免费试用'}}</a>
+      </div>
+    </div>
+
+    <div class="banner-bottom">
+      <div class="bg-white video-top"></div>
+      <div class="bg-primary video-bottom"></div>
+      <div class="video-content">
+        <div class="demo-video flex-center" :style="isPlay ? 'height: auto;':''">
+          <video id="playVideo" ref="playVideo" width="100%" height="100%" :poster="region == 'CN' ? '../images/poster.png' : ''" controls="controls" style="display: unset;object-fit: cover;">
+            <source :src="translai_video" type="video/mp4" />
+          </video>
+          <div class="demo-video-play" :style="isPlay ? 'display: none':''">
+            <img @click="playClick()" src="../images/play.png" class="video-img" alt="play_icon" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 工作流 -->
+  <div class="product-block" id="workflow">
+    <el-divider>{{ 'AI 人机交互翻译工作流' }}</el-divider>
+    <div class="flex pl-hg pt-hg menu-hide">
+      <el-timeline style="padding: 80px 0 40px 0;width: 320px;">
+        <el-timeline-item
+          v-for="(step, index) in worksteps"
+          :key="index"
+          :color="active_step == step ? (step == 'proofreading' || step == 'manual' ? '#4aa48d' : '#4aa48d') : ''"
+          size="large">
+          <div @click="newStep(step)" class="workstep flex-center" :class="active_step == step ? (step == 'proofreading' || step == 'manual' ? 'active_workstep_y' : 'active_workstep') : ''">
+            {{ zhSteps[step]}}
+            <img v-if="(step == 'proofreading' || step == 'manual') && active_step == step" class="icon-pen ml-xs" src="../images/pen-w.png" alt="pen">
+            <img v-if="(step == 'proofreading' || step == 'manual') && active_step != step" class="icon-pen ml-xs" src="../images/pen-b.png" alt="pen">
+          </div>
+        </el-timeline-item>
+      </el-timeline>
+      <div class="step-img">
+        <img v-if="active_step === 'upload'" class="workflow-img" src="../images/zh_upload.png" alt="upload">
+        <img v-if="active_step === 'transcribe'" class="workflow-img" src="../images/zh_transcribe.png" alt="transcribe">
+        <img v-if="active_step === 'proofreading'" class="workflow-img" src="../images/zh_proofreading.png" alt="proofreading">
+        <img v-if="active_step === 'translation'" class="workflow-img" src="../images/zh_translation.png" alt="translation">
+        <img v-if="active_step === 'manual'" class="workflow-img" src="../images/zh_manual.png" alt="manual">
+        <img v-if="active_step === 'confirmation'" class="workflow-img" src="../images/zh_confirmation.png" alt="confirmation">
+        <img v-if="active_step === 'download'" class="workflow-img" src="../images/zh_download.png" alt="download">
+      </div>
+    </div>
+
+    <div class="pt hide menu-show">
+      <el-timeline style="padding: 40px 0;width: 320px;margin: 0 auto;">
+        <el-timeline-item
+          v-for="(step, index) in worksteps"
+          :key="index"
+          :color="active_step == step ? (step == 'proofreading' || step == 'manual' ? '#4aa48d' : '#4aa48d') : ''"
+          size="large">
+          <div @click="newStep(step)" class="workstep" :class="active_step == step ? (step == 'proofreading' || step == 'manual' ? 'active_workstep_y' : 'active_workstep') : ''">
+            {{ zhSteps[step]}}
+            <img v-if="(step == 'proofreading' || step == 'manual') && active_step == step" class="icon-pen ml-xs" src="../images/pen-w.png" alt="pen">
+            <img v-if="(step == 'proofreading' || step == 'manual') && active_step != step" class="icon-pen ml-xs" src="../images/pen-b.png" alt="pen">
+          </div>
+        </el-timeline-item>
+      </el-timeline>
+      <div class="step-img">
+        <img v-if="active_step === 'upload'" class="workflow-img" src="../images/zh_upload.png" alt="upload">
+        <img v-if="active_step === 'transcribe'" class="workflow-img" src="../images/zh_transcribe.png" alt="transcribe">
+        <img v-if="active_step === 'proofreading'" class="workflow-img" src="../images/zh_proofreading.png" alt="proofreading">
+        <img v-if="active_step === 'translation'" class="workflow-img" src="../images/zh_translation.png" alt="translation">
+        <img v-if="active_step === 'manual'" class="workflow-img" src="../images/zh_manual.png" alt="manual">
+        <img v-if="active_step === 'confirmation'" class="workflow-img" src="../images/zh_confirmation.png" alt="confirmation">
+        <img v-if="active_step === 'download'" class="workflow-img" src="../images/zh_download.png" alt="download">
+      </div>
+    </div>
+  </div>
+
+  <!-- 产品介绍 -->
+  <div id="product">
+    <div class="price-block">
+      <el-divider>{{ '两种服务方案，可根据需求灵活选择' }}</el-divider>
+      <div class="flex-center pb-lg">
+        <div class="one-stop">
+          <div class="content">{{'方案一：AI+人一站式服务'}}</div>
+          <div class="font-md">{{'颠覆传统语言外包模式，提供价格低于市场'}}<span class="font-lg text-primary"> 30%-50% </span>{{'的定制化翻译服务'}}</div>
+          <div class="onestop-features flex space-between mt-hg">
+            <div class="onestop-feature mr">
+              <img class="onestop-icon" src="../images/ais.png" alt="ai">
+              <div class="text-bold text-primary mt">
+                {{ 'AI + 人工精校' }}
+              </div>
+              <div class="mt-xs">
+                {{ '基于AI提供人工精校服务' }}
+              </div>
+            </div>
+            <div class="onestop-feature">
+              <img class="onestop-icon" src="../images/custom.png" alt="customization">
+              <div class="text-bold text-primary mt">
+                {{ '定制化译员团队' }}
+              </div>
+              <div class="mt-xs">
+                {{ '根据客户所属行业和语种需求匹配固定译员团队，提供长期服务' }}
+              </div>
+            </div>
+          </div>
+          <div class="onestop-features flex space-between mt-hg">
+            <div class="onestop-feature mr">
+              <img class="onestop-icon" src="../images/secure.png" alt="secure">
+              <div class="text-bold text-primary mt">
+                {{ '内容安全' }}
+              </div>
+              <div class="mt-xs">
+                {{ '独立云账户，安全有保障' }}
+              </div>
+            </div>
+            <div class="onestop-feature">
+              <img class="onestop-icon" src="../images/point.png" alt="online">
+              <div class="text-bold text-primary mt">
+                {{ '线上审稿&打分' }}
+              </div>
+              <div class="mt-xs">
+                {{ '全线上审稿，无需文件来回传输，可对翻译人员打分' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- <div class="border-shadow"></div> -->
+
+    <div class="service flex menu-hide">
+      <div class="service-img">
+        <img src="https://transflow-transcribe-res-prod.s3.cn-northwest-1.amazonaws.com.cn/source/onestop.gif" style="width: 100%;" alt="onestop">
+      </div>
+      <div class="service-content flex-center">
+          <div>
+          <div class="flex align-items-center">
+            <img src="../images/check.svg" class="icon mr" alt="check">
+            {{ '免费开户 + 首单流量减免' }}
+          </div>
+          <div class="flex align-items-center mt-sm">
+            <img src="../images/check.svg" class="icon mr" alt="check">
+            {{ '2分钟免费Demo制作' }}
+          </div>
+          <div class="flex align-items-center mt-sm">
+            <img src="../images/check.svg" class="icon mr" alt="check">
+            {{ '根据客户视频语种/内容/视频量针对性报价' }}
+          </div>
+          <div class="flex align-items-center mt-sm">
+            <img src="../images/check.svg" class="icon mr" alt="check">
+            {{ '超高性价比, 低于市场价格30%-50%' }}
+          </div>
+          <div class="flex">
+            <div class="learnBtn mt-lg" @click="contactService('立即询价')">{{'立即询价'}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-sys flex-center menu-hide">
+      <div class="sys-info-c">
+        <div class="content">{{'方案二：AI翻译SaaS系统'}}</div>
+        <div class="font-md mb-hg">{{'一分钟拥有一套智能化翻译系统，适合自有译员的团队/个人'}}</div>
+        <div class="flex">
+          <div>
+            <div class="flex align-items-center mt-sm">
+              <img src="../images/AI.png" class="icon-xs mr-sm" alt="ai">
+              {{ 'AI听译 + AI打轴 + 视频云端压制' }}
+            </div>
+            <div class="flex align-items-center mt-sm">
+              <img src="../images/huge.png" class="icon-xs mr-sm" alt="massive">
+              {{ '配备项目管理系统，一名管理员可轻松管理海量视频' }}
+            </div>
+            <div class="flex align-items-center mt-sm">
+              <img src="../images/cloud.png" class="icon-xs mr-sm" alt="cloud">
+              {{ '不限人数云端协同工作' }}
+            </div>
+            <div class="flex align-items-center mt-sm">
+              <img src="../images/service.png" class="icon-xs mr-sm" alt="service">
+              {{ '人工客服支持' }}
+            </div>
+          </div>
+          <img class="lower-img" style="margin-top: -20px;" src="../images/lower.png" alt="lower_cost">
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <div class="hide menu-show system">
+      <div class="service-img">
+        <img src="https://transflow-transcribe-res-prod.s3.cn-northwest-1.amazonaws.com.cn/source/onestop.gif" style="width: 100%;">
+      </div>
+      <div class="service-content">
+        <div class="flex align-items-center">
+          <img src="../images/check.svg" class="icon mr" alt="check">
+          {{ '免费开户 + 首单流量减免' }}
+        </div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/check.svg" class="icon mr" alt="check">
+          {{ '2分钟免费Demo制作' }}
+        </div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/check.svg" class="icon mr" alt="check">
+          {{ '根据客户视频语种/内容/视频量针对性报价' }}
+        </div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/check.svg" class="icon mr" alt="check">
+          {{ '超高性价比, 低于市场价格30%-50%' }}
+        </div>
+        <div class="flex-center">
+          <div class="learnBtn mt-lg" @click="contactService('立即询价')">{{'立即询价'}}</div>
+        </div>
+        
+      </div>
+      <div class="sys-info mt-lg">
+        <div class="content">{{'方案二：AI翻译SaaS系统'}}</div>
+        <div class="font-md mb">{{'一分钟拥有一套智能化翻译系统，适合自有译员的团队/个人'}}</div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/AI.png" class="icon-xs mr-sm" alt="ai">
+          {{ 'AI听译 + AI打轴 + 视频云端压制' }}
+        </div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/huge.png" class="icon-xs mr-sm" alt="massive">
+          {{ '配备项目管理系统，一名管理员可轻松管理海量视频' }}
+        </div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/cloud.png" class="icon-xs mr-sm" alt="cloud">
+          {{ '不限人数云端协同工作' }}
+        </div>
+        <div class="flex align-items-center mt-sm">
+          <img src="../images/service.png" class="icon-xs mr-sm" alt="service">
+          {{ '人工客服支持' }}
+        </div>
+        <img class="lower-img mt" src="../images/lower.png" alt="lower_cost">
+      </div>
+      
+    </div>
+
+    <div class="packages flex-center pb-lg">
+      <!-- <div class="package-top flex-center">
+        <div class="package-hd flex text-muted font-md">
+          <div :class="'package-name' + (active_pkg == 'data_p' ? ' active_pname': '')" @click="changePkg('data_p')">流量包</div>
+          <div :class="'package-name' + (active_pkg == 'fixed_p' ? ' active_pname': '')" @click="changePkg('fixed_p')">固定套餐</div>
+          <div :class="'package-name' + (active_pkg == 'custom_p' ? ' active_pname': '')" @click="changePkg('custom_p')">定制流量包</div>
+        </div>
+      </div> -->
+      <div class="package-top flex-center"></div>
+      <div class="package-bd flex">
+        <div v-for="(item, index) in active_pkgs" :key="index" :class="'flex-center ' + (active_index == index ? 'active_p': 'inactive_p')" @mouseenter="active_index = index" @mouseleave="active_index = -1">
+          <div :class="'package' + (active_index == index ? ' active_package': '')">
+            <div :class="'package-title flex-center' + (active_index == index ? ' text-white': '')">
+              {{ item.title }}
+            </div>
+            <div :class="'package-price text-primary mt-lg' + (active_index == index ? ' text-white': '')">
+              <span v-if="index == 0"><span class="font-2x">￥{{ item.price }}</span>/分钟</span>
+              <span v-if="index == 1 || index == 2 || index == 3"><span class="font-2x">￥{{ item.price }}</span>/月</span>
+              <span v-if="index == 4"><span class="font-2x">>{{ item.size }}</span> 分钟/月</span>
+            </div>
+            <div :class="'package-size text-primary flex-center mt-sm mb-lg font-sm' + (active_index == index ? ' text-white': '')">
+              <!-- <span v-if="active_pkg =='data_p'">{{ item.size }} 分钟</span> -->
+              <span v-if="index == 1 || index == 2 || index == 3">{{ item.size }} 分钟</span>
+              <span v-if="index == 4">低至 ￥{{ item.price }}/分钟</span>
+            </div>
+            <div style="height: 120px;width: 135px;margin: 0 auto;">
+              <div v-for="(tip, index_t) in item.tips" :key="index_t" :class="'tip mb-xs text-primary flex align-items-center font-sm' + (active_index == index ? ' text-white': '')">
+                <img v-if="active_index == index" src="../images/check-o.svg" class="icon-mini mr-xs" alt="check">
+                <img v-else src="../images/check-u.svg" class="icon-mini mr-xs" alt="check">
+                {{ tip }}
+              </div>
+            </div>
+            <div class="flex-center">
+              <a :class="'pkg-btn' + (active_index == index ? ' activepkg-btn': '')" @click="jumpMgrLogin('免费试用', item.title)">免费试用</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 平台 5 大特色 -->
+  <div id="feature">
+    <div class="features">
+      <div class="feature-block flex-center">
+        <el-divider class="grey-divider">{{ '平台 5 大特色' }}</el-divider>
+
+        <div class="feature-top flex">
+          <div v-for="(item, index) in cn_top_features" :class="'feature-card pl-sm pr-sm pb mt flex bg-white' + (active_card == item.key ? ' active_card': '')" @click="changeFeature(item)">
+            <div style="height: 80px;">
+              <div class="flex">
+                <div class="feature-title font-md">{{ item.title }} →</div>
+              </div>
+              <div class="" :class="'feature-des text-grey mt-xs' + (active_card == item.key ? ' text-white': '')">{{ item.des }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="feature-bt flex pt-lg">
+          <div v-for="(item, index) in cn_bt_features" :class="'feature-card pl pr pb mt flex bg-white' + (active_card == item.key ? ' active_card': '')" @click="changeFeature(item)">
+            <div style="height: 60px;">
+              <div class="flex">
+                <div class="feature-title font-md">{{ item.title }} →</div>
+              </div>
+              <div class="" :class="'feature-des font-sm text-grey mt-xs' + (active_card == item.key ? ' text-white': '')">{{ item.des }}</div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="feature-carousel bg-white flex-center">
+        <div class="carousel-bd">
+          <el-carousel ref="carousel" :autoplay="false" type="card" arrow="always" @change="carouselChange">
+            <el-carousel-item v-for="(item, index) in active_feature" :key="index" class="flex-center">
+              <div class="bg-white flex-center">
+                <img :src="'../images/feature/cn/cn' + item + '.png'" class="carousel-img" alt="features">
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 客户评价 -->
+  <div id="client">
+    <div class="clients">
+      <div class="client-block flex-center">
+        <el-divider>{{ '客户评价' }}</el-divider>
+      </div>
+
+      <div class="client-bd mt-lg pb-hg">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeInRight"
+        leave-active-class="animated fadeOutLeft">
+          <div v-if="client.company" class="client-item flex">
+            <div class="client-header">
+              <div class="client-word">“{{client.word}}”</div>
+              <div class="client-name mt-lg">{{client.title}}，{{client.company}}</div>
+            </div>
+            <img :src="client.url" class="client-img ml-hg" alt="client_logo">
+          </div>
+        </transition>
+
+        <div class="scrollbar">
+          <!-- <el-scrollbar :native="false"> -->
+            <div class="flex space-between">
+              <div v-for="(item, index) in clientList" :key="index" @click="changeClient(index)">
+                <img :src="item.url" :class="'clients-img' + (active_client == index ? ' border-bottom': '')" alt="client_logo">
+              </div>
+            </div>
+          <!-- </el-scrollbar> -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 联系我们 -->
+  <div id="contact">
+    <div class="contact pt-hg">
+      <div class="contact-block">
+        <el-divider>{{ '联系我们' }}</el-divider>
+      </div>
+      <div class="contact-bd flex mt-hg pb-hg" v-if="region == 'CN'">
+        <div class="flex column justify-content-center">
+          <img src="../images/qrCode.png" class="qr-code" alt="qrcode">
+          <div class="flex-center">{{ 'Translai 服务号' }}</div>
+        </div>
+        <div class="flex column text-bold ml-hg column-wechat">
+          <div class="flex align-items-center mb-lg">
+            <img src="../images/email.png" class="contact-icon mr" alt="email">
+            {{ 'Email: contact@translai.cloud' }}
+          </div>
+          <div class="flex align-items-center mb-lg">
+            <img src="../images/wechat.png" class="contact-icon mr" alt="wechat">
+            {{ 'Wechat: 13641838549' }}</div>
+          <div class="flex align-items-center">
+            <img src="../images/phone.png" class="contact-icon mr" alt="phone">
+            {{ 'Phone: 4008344504' }}
+            <!-- <a href="tel:13641838549">拨号</a> -->
+          </div>
+        </div>
+      </div>
+      <div class="contact-bd flex mt-hg pb-hg" v-else>
+        <div class="flex column text-bold column-wechat">
+          <span><el-input class="message-input mb" v-model="name" :required="true" placeholder="姓名" maxlength="60" /></span>
+          <span><el-input class="message-input mb" v-model="email" :required="true" placeholder="邮箱" maxlength="255"/></span>
+          <span><el-input class="message-input" v-model="message" type="textarea" :autosize="{ minRows: 5, maxRows: 5}" :required="true" placeholder="消息" maxlength="200" show-word-limit/></span>
+          <div class="submit" @click="addContact()">{{'提交'}}</div>
+        </div>
+
+        <div class="flex column justify-content-center">
+          <img src="../images/contactus.png" class="message-icon" alt="contact_us">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footerMain" v-if="region == 'CN'">
+      <img src="../images/logo.png" class="logo" alt="logo" />
+      <div class="container">
+        <div class="footer_info">Translai是AI人机交互数字化语言服务云平台，我们立足于翻译科学，致力于将先进的AI、云计算和大数据研究成果赋能全球本地化产业，推动语言服务数字化。</div>
+        <div class="footer_addr">地址：上海市静安区万荣路1268号市北高新云立方A座四层</div>
+        <div class="footer_tel">联系电话：4008344504</div>
+        <div class="footer_beian flex-center">
+          <div>上海臻柚科技有限公司</div>
+          <div class="ml">沪ICP备20012005</div>
+          <div class="ml-xs flex-center">
+            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31010602005602" rel="nofollow" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="../images/beian.png" style="float:left;" alt="beian" /><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">沪公网安备 31010602005602号</p></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footerMain_fo pb" v-else>
+      <div class="fo_addr flex-center">Floor 4, Building A, No.1268 Wanrong Road, Shanghai, PRC, 200436</div>
+      <div class="fo_contact flex-center mt">
+        <div><a target="#blank" rel="nofollow" href="https://www.linkedin.com/company/31568982"><img src="../images/footer_1.png" class="contact-icon mr-lg" alt="linkedin" /></a></div>
+        <div><a target="#blank" rel="nofollow" href="https://twitter.com/Transflow2"><img src="../images/footer_2.png" class="contact-icon mr-lg" alt="twitter" /></a></div>
+        <div><a target="#blank" rel="nofollow" href="https://www.facebook.com/Transflow-105360231300363/"><img src="../images/footer_3.png" class="contact-icon mr-lg" alt="facebook" /></a></div>
+      </div>
+      <!-- <div class="fo_policy flex-center">
+       <div v-on:click="showTermService" style="border-bottom: 1px solid black;padding-bottom: 3px;">Terms & Condition</div>
+       <div style="width: 15px;border-right: 1px solid black;">&nbsp;</div>
+       <div style="width: 15px;">&nbsp;</div>
+       <div v-on:click="showPrivacyPolicy" style="border-bottom: 1px solid black;padding-bottom: 3px;">Privacy Policy</div>
+      </div> -->
+    </div>
+    <!-- <term-service ref="termService"></term-service>
+    <privacy-policy ref="privacyPolicy"></privacy-policy> -->
+  </footer>
+
+  <!-- 联系客服 -->
+  <div v-if="region == 'CN'" class="contact-service" data-agl-cvt="1">
+    <!-- <div :class="'contact-btn mr flex-center bg-white' + (ishover && !isclick ? ' btn-hide': '')">
+      <img src="../images/arrow-p.png" class="arrow-p" />
+      <span class="pl-sm pr-sm">联系客服</span>
+      <img src="../images/arrow-p.png" class="arrow-p" />
+    </div> -->
+    <div :class="'service-icon flex-center ' + (ishover ? ' larger': '')" @mouseenter="mouseenter">
+      <img v-show="!ishover" src="../images/service.png" class="fixed-icon bg-white" />
+      <img v-show="ishover" src="../images/wechat-theme.png" class="fixed-icon" />
+    </div>
+    <div v-if="ishover" class="qr-dialog bg-white flex-center column" @mouseleave="mouseleave">
+      <div class="flex align-items-center">
+        <img src="../images/xiaoya.png" class="xiaoya" />
+        <div>
+          <div class="font-lg text-bold">您好！</div>
+          <div class="">请扫码添加客服小雅微信</div>
+        </div>
+      </div>
+      <img src="../images/qrService.png" class="qr-service mt-sm" />
+
+      <div class="flex-center mt-sm font-md text-bold">
+        联系电话：4008344504
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script src="../js/swiper.min.js"></script>
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/index.js"></script>
+<script src="../js/sensorsdata.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script>
+
+  //神策埋点初始化
+  var startTime = 0
+  var endTime = 0
+  var sensors = window['sensorsDataAnalytic201505'];
+	sensors.init({
+  	server_url: window.SC_URL,
+    is_track_single_page: false, 
+    use_client_time:true,
+    show_log: false,
+    preset_properties: { search_keyword_baidu : true  },
+    send_type:'beacon',
+    heatmap: {
+      clickmap:'default',
+      scroll_notice_map:'default'
+    }
+	});
+
+  sensors.registerPage({
+    platform_type: 'Translai官网',
+    language: window.APP_REGION.indexOf('CN') >= 0 ? (localStorage.getItem("lang") || "zh") : (localStorage.getItem("lang") || "en"),
+  });
+
+  sensors.quick('isReady',function(){
+    let distinctid = sensors.quick('getAnonymousID');
+    sessionStorage.setItem('AnonymousID', distinctid)
+  });
+
+  sensors.quick('autoTrack'); //用于采集 
+
+  function videoPlay() {
+    let video = document.getElementById('playVideo')
+    let duration = document.getElementById('playVideo').duration
+    startTime = video.currentTime
+    sensors.track('start_video_play', {
+      video_name: 'translai.mp4',
+      video_duration: duration,
+      video_position: video.currentTime
+    })
+  }
+
+  function videoPause() {
+    let video = document.getElementById('playVideo')
+    let duration = document.getElementById('playVideo').duration
+    startTime = video.currentTime
+    sensors.track('start_video_play', {
+      video_name: 'translai.mp4',
+      video_duration: duration,
+      video_position: video.currentTime
+    })
+  }
+
+  new Vue ({
+    el: '#app',
+
+    data () {
+      return {
+        active_label: '',
+
+        xiaoyaShow: false,
+        isclick: false,
+        ishover: false,
+
+        name: '',
+        email: '',
+        message: '',
+
+        region: '',
+        isPlay: false,
+        client: {},
+        active_client: 0,
+
+        initial: 0,
+        width: document.documentElement.clientWidth + 'px',
+        height: document.documentElement.clientHeight + 'px',
+
+        showMenu: false,
+
+        active_feature: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        active_card: 'onestop',
+        active_index: 0,
+        active_pkgs: [
+          { title: '流量包', price:9.9, size: 100, tips: [
+            '免费开户', '10分钟免费试用流量', '按需充值，长期有效'
+          ] },
+          { title: '基础套餐', price:680, size: 100, tips: [
+            '免费开户', '10分钟免费试用流量', '含100分钟套餐内流量'
+          ] },
+          { title: '中级套餐', price:3000, size: 500, tips: [
+            '免费开户', '10分钟免费试用流量', '含500分钟套餐内流量'
+          ] },
+          { title: '高级定制套餐', price:5200, size: 1000, tips: [
+            '免费开户', '10分钟免费试用流量', '含1000分钟套餐内流量'
+          ] },
+          { title: '定制套餐包', price:2, size: 1000, tips: [
+            '享受月套餐包所有权益', '享受项目制合作价格', '一对一操作培训', '专属客户经理'
+          ] }
+        ],
+        data_p: [],
+        custom_p: [],
+        fixed_p: [],
+        active_pkg: 'fixed_p',
+        translai_video: window.APP_URL + "/file/common/transflow.mp4",
+        web_url: window.WEB_URL,
+        index_dom: '',
+        offset: true,
+
+        langShow: false,
+        loginShow: false,
+        
+        lang: 'zh',
+
+        active_step: 'upload',
+        worksteps: ['upload', 'transcribe', 'proofreading', 'translation', 'manual', 'confirmation', 'download'],
+
+        zhSteps: {
+          upload: '上传视频/音频',
+          transcribe: 'AI听写 + AI打轴',
+          proofreading: '原文校对',
+          translation: 'AI翻译',
+          manual: '译文校对',
+          confirmation: '客户线上审稿',
+          download: '字幕下载/视频压制'
+        },
+
+        menuList: [
+          { label: '首页', goto: "home" },
+          { label: '工作流', goto: "workflow" },
+          { label: '产品介绍', goto: "product" },
+          { label: '平台特色', goto: "feature" },
+          { label: '客户评价', goto: "client" },
+          { label: '联系我们', goto: "contact" },
+          { label: '免费试用', goto: "free" },
+        ],
+
+        cn_top_features: [
+          { title: '一站式体验', des: '上传，编辑，压制下载一站式云端操作，无需下载软件，无需切换软件', key: 'onestop' },
+          { title: 'AI人机协同工作流', des: 'AI人机交互协同工作流，降低30% - 50%人力成本', key: 'workflow' },
+          { title: '项目管理', des: '一名管理员也可管理海量翻译项目和译员，极大降低管理成本', key: 'project' },
+          { title: '译员定制化', des: '根据客户需求匹配专项译员，提供固定/长期翻译服务', key: 'translator' },
+          { title: '双系统', des: '客户可通过URL邀请译员加入自己的线上团队，安全性高', key: 'double' },
+        ],
+        cn_bt_features: [
+          
+        ],
+
+        clientList: [
+          { company: '蜻蜓FM', title: '内容商务合作总监赵晨', word: 'Translai作为新一代数字化语言服务商提供了完全不同于传统翻译公司的优质、定制化服务。', url: ('../images/logo/logo9.png')},
+          { company: '大家保险集团', title: '供应链管理部', word: 'Translai从多家语言服务商中脱颖而出，作为唯一一家科技公司中标并成为我们的语言服务商。期待Translai成为行业引领者。', url: ('../images/logo/logo10.png')},
+          { company: 'NG+开发者大会主办方', title: '肖博士', word: 'Translai为NG+大会提供的中英文双语字幕，是这个行业的全球首次，非常感谢!', url: ('../images/logo/logo4.png') },
+          { company: 'Körber Supply chain(柯尔柏供应链）', title: '市场部', word: '我们是一家全球化企业，有持续的视频本地化需求，在收到Translai的报价的时候我惊呆了，竟然比我们以往的供应商的价格低了这么多，而做出的视频质量很高，还做了免费的Demo给我们，我非常看好Translai，所以推荐给了同行。', url: ('../images/logo/logo3.png')},
+          { company: 'Tesa（德莎胶带）', title: '培训专员', word: '我们和Translai的合作非常愉快，反应速度快，性价比高，愿意推荐！', url: ('../images/logo/logo5.png')},
+          { company: 'Pilz（皮尔磁）', title: '市场部', word: '之前用过很多其他的平台工具，比较起来，Translai在服务和效率上更好，期待长期合作。', url: ('../images/logo/logo1.png') },
+          { company: '万可电子', title: '市场部', word: '作为一家全球化跨国公司，我们一直对视频本土化翻译有需求。今年和Translai合作，发现性价比很高，我们很满意，值得推荐。', url: ('../images/logo/logo2.png') },
+        ],
+        index_dom: '',
+      }
+    },
+
+    mounted() {
+      this.region = window.APP_REGION
+      window.addEventListener('scroll', () => {
+        this.scrollShow();
+      });
+      this.$nextTick(() => {
+        this.scrollShow();
+      })
+      let that = this;
+      window.onresize = () => {
+        return (() => {
+          that.height = document.documentElement.clientHeight + 'px'; // 高
+          that.width = document.documentElement.clientWidth + 'px'; // 宽
+        })()
+      }
+    },
+
+    created () {
+      this.changeClient(0)
+      // this.active_pkgs = this.fixed_p
+      // this.playClick()
+      // document.getElementById('playVideo').play()
+    },
+
+    methods: {
+      addContact() {
+        const temp = {
+          name : this.name,
+          email : this.email,
+          message : this.message,
+        }
+        $.ajax ({
+          url: window.APP_URL + '/api/gateway/user/addContact',
+          dataType: 'json',
+          type: 'post',
+          data: JSON.stringify (temp),
+          contentType: 'application/json',
+        }).done (obj => {
+          if (obj.err == 200) {
+            this.$message.success('提交成功');
+          } else {
+            this.$message.error('提交失败');
+          }
+        })
+      },
+
+      carouselChange(index) {
+        if (index < 3) {
+          this.active_card = 'onestop'
+        } else if (index < 5) {
+        this.active_card = 'workflow'
+        } else if (index < 7) {
+        this.active_card = 'project'
+        } else if (index < 9) {
+        this.active_card = 'translator'
+        } else {
+        this.active_card = 'double'
+        } 
+      },
+
+      mouseenter() {
+        this.ishover = true
+      },
+
+      mouseleave() {
+        this.ishover = false
+      },
+
+      mouseclick() {
+        this.isclick = !this.isclick
+        console.log('isclick', this.isclick)
+      },
+
+      playClick() {
+        console.log('playClick')
+        this.index_dom = document.getElementById('playVideo')
+        let duration = document.getElementById('playVideo').duration
+
+        const _this = this
+        _this.index_dom.addEventListener('play', function () { //播放开始执行的函数
+          // 视频播放埋点
+          _this.startTime = _this.index_dom.currentTime
+          sensors.track('start_video_play', {
+            video_name: 'translai.mp4',
+            video_duration: duration,
+            video_position: _this.index_dom.currentTime
+          })
+        })
+
+        _this.index_dom.addEventListener('pause', function () { //暂停开始执行的函数
+          // 视频结束埋点
+          _this.endTime = _this.index_dom.currentTime
+          sensors.track('end_video_play', {
+            video_name: 'translai.mp4',
+            video_duration: duration,
+            video_position: _this.index_dom.currentTime,
+            video_play_duration: parseFloat(_this.endTime - _this.startTime)
+          })
+        })
+
+        _this.index_dom.addEventListener('ended', function () { //结束
+          // 视频播放埋点
+          _this.endTime = _this.index_dom.currentTime
+          sensors.track('end_video_play', {
+            video_name: 'translai.mp4',
+            video_duration: duration,
+            video_position: _this.index_dom.currentTime,
+            video_play_duration: parseFloat(_this.endTime - _this.startTime)
+          })
+        }, false)
+
+        _this.index_dom.play();
+        _this.isPlay = !_this.isPlay
+      },
+      changeClient(index) {
+        this.active_client = index
+        this.client = Object.assign({})
+        this.$nextTick(() => {
+          this.client = Object.assign({}, this.clientList[index])
+        })
+      },
+
+      changeFeature(item) {
+        this.active_card = item.key
+        if (item.key == 'onestop') this.$refs.carousel.setActiveItem(0)
+        if (item.key == 'workflow') this.$refs.carousel.setActiveItem(3)
+        if (item.key == 'project') this.$refs.carousel.setActiveItem(5)
+        if (item.key == 'translator') this.$refs.carousel.setActiveItem(7)
+        if (item.key == 'double') this.$refs.carousel.setActiveItem(9)
+        sensors.track('click_platform_feature', {
+          feature_name: item.title
+        })
+      },
+
+      changePkg(pkg) {
+        this.active_pkg = pkg
+        
+        if (pkg == 'custom_p') this.active_pkgs = this.custom_p
+        if (pkg == 'data_p') this.active_pkgs = this.data_p
+        if (pkg == 'fixed_p') this.active_pkgs = this.fixed_p
+
+        this.active_index = 0
+      },
+      /**
+     * @desc: 查看工作流
+     */
+     newStep(step) {
+        this.active_step = step
+        // 查看工作流埋点
+        sensors.track('click_workflow', {
+          process_name: this.zhSteps[step],
+        })
+      },
+      scrollShow() {
+        let scrollTop  = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        let viewHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        // if (scrollTop > 10) {
+        //   if (!this.offset) this.offset = true;
+        // } else {
+        //   if (this.offset) this.offset = false;
+        // }
+
+        let refArray = ['#workflow', '#product', '#feature', '#client', '#contact'];
+        refArray.forEach(dom => {
+          if ($(dom).length) {
+            let top = $(dom)[0].offsetTop;
+            if(scrollTop + viewHeight > top + 120){
+              $(dom).addClass("divAnimation");
+            }
+          }
+          // if ($(dom).selector == '#price') {
+          //   document.getElementById('onestopVideo').play()
+          // }
+        });
+      },
+
+      // 点击顶部导航栏埋点
+      clickTopNavigation(label) {
+        sensors.track('click_top_navigation_bar', {
+          button_name: label,
+        })
+        this.showMenu = false
+        this.active_label = label
+      },
+      /**
+       * 跳转Mgr登陆页
+       */
+      jumpMgrLogin(button_name, package_name) {
+        // 点击免费试用埋点
+        sensors.track('click_trial', {
+          package_name: package_name ? package_name : '',
+          button_name: button_name
+        })
+        document.location.href = window.MGR_URL;
+      },
+
+      contactService(button_name, package_name) {
+        sensors.track('click_trial', {
+          package_name: package_name ? package_name : '',
+          button_name: button_name
+        })
+        document.location.href = '#contact'
+      },
+
+      toQa() {
+        document.location.href = window.WEB_URL + '/base/qa'
+      },
+
+      changeLang(command) {
+        if (command == 'zh') {
+          this.lang = 'zh'
+          localStorage.setItem('lang', command)
+          window.location.href = '../cn/index.html'
+        }
+        if (command == 'en') { 
+          this.lang = 'en'
+          localStorage.setItem('lang', command)
+          window.location.href = '../en/index.html'
+        }
+        if (command == 'fr') { 
+          this.lang = 'fr'
+          localStorage.setItem('lang', command)
+          window.location.href =  '../fr/index.html'
+        }
+        this.langShow = false
+      },
+
+      toLogin(url) {
+        if (url=='mgr') document.location.href = window.MGR_URL + '/gateway/login'
+        if (url=='web') document.location.href = window.WEB_URL
+        if (url=='dms') document.location.href = window.DMS_URL + '/gateway/login'
+        this.loginShow = false
+        sensors.track('click_register_button')
+      }
+    },
+    
+  })
+
+</script>
+</body>
+</html>
