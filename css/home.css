@@ -1,0 +1,123 @@
+#header {
+	position: fixed;
+	z-index: 100;
+	left: 0;
+	right: 0;
+	top: 30px;
+}
+.nav2 ul {
+	margin-top: 15px;
+}
+.nav2 li {
+	float: left;
+	margin-left: 25px;
+	border-left: 1px solid #cdcdcd;
+}
+.nav2 li:nth-child(1) {
+	border: none;
+}
+.nav2 li a {
+	color: #fff;
+	padding-left: 25px;
+	line-height: 23px;
+}
+#container {
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	text-align: center;
+}
+.sections {
+	position: relative
+}
+.section {
+	position: relative;
+	z-index: 10
+}
+.section img {
+	width: 100%
+}
+.item .text {
+	position: absolute;
+	top: 50%;
+	left: .5em;
+	right: .5em;
+	text-align: center;
+	transform: translate(0, -50%);
+}
+.product1 {
+	background: #3671cf url(../images/banner_01.jpg) center center no-repeat;
+	background-size: cover
+}
+.product2 {
+	background: #3671cf url(../images/banner_02.jpg) center center no-repeat;
+	background-size: cover
+}
+.product3 {
+	background: #3671cf url(../images/banner_03.jpg) center center no-repeat;
+	background-size: cover
+}
+.product4 {
+	background: #3671cf url(../images/banner_04.jpg) center center no-repeat;
+	background-size: cover
+}
+.section h2, .section p {
+	color: #fff;
+}
+.section h2 {
+	text-transform: uppercase;
+	margin-bottom: 45px;
+	font-weight:500;
+}
+.section p {
+	width: 90%;
+	margin: 0 auto;
+	max-width: 1200px;
+}
+.btn {
+	text-align: center;
+	position: relative;
+	display: inline-block;
+	margin-top: 45px;
+}
+.btn a {
+	display: inline-block;
+	width: 244px;
+	height: 52px;
+	line-height: 52px;
+	background-color: #78ba1c;
+	font-size: 18px;
+	text-transform: uppercase;
+	margin: 0 10px;
+}
+.btn a:hover span {
+	margin-right: 10px
+}
+.nav3 {
+	margin-top: -71px;
+	position: fixed;
+	right: 40px;
+	top: 50%;
+	z-index: 50
+}
+.nav3 li a span {
+	background: url(../images/pager.png) center center no-repeat;
+	display: block;
+	width: 22px;
+	height: 22px;
+	text-indent: -9999px
+}
+.nav3 li.active a span {
+	background: url(../images/pager1.png) center center no-repeat
+}
+.hidden-lg {
+	display: none !important;
+}
+.footer_link_home {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border-top: 1px solid #fff;
+	padding-top: 20px;
+}
